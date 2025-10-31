@@ -1,0 +1,98 @@
+{
+  "metadata": {
+    "created_date": "2024-10-31",
+    "phase": "Phase 2: Fine-Tuning & Validation Pipeline Setup",
+    "model": "PaddleOCR-VL",
+    "model_params": "0.9B",
+    "supported_languages": 109
+  },
+  "dataset_info": {
+    "total_samples": 0,
+    "train_samples": 0,
+    "val_samples": 0,
+    "train_ratio": 0.8,
+    "val_ratio": 0.2,
+    "vendor_distribution": {},
+    "language_distribution": {},
+    "data_source": "Phase 1 curated DocuSpend dataset",
+    "stratification": "balanced by (vendor, language) pair"
+  },
+  "training_config": {
+    "epochs": 30,
+    "batch_size": 8,
+    "learning_rate_init": 0.001,
+    "optimizer": "Cosine",
+    "warmup_epochs": 2,
+    "save_epoch_step": 5,
+    "mixed_precision": true,
+    "amp_level": "O1"
+  },
+  "augmentations": [
+    {
+      "name": "Rotate",
+      "limit": 15,
+      "probability": 0.3,
+      "purpose": "Handle document skew"
+    },
+    {
+      "name": "GaussianBlur",
+      "blur_limit": 3,
+      "probability": 0.2,
+      "purpose": "Simulate focus and motion blur"
+    },
+    {
+      "name": "RandomContrast",
+      "limit": 0.3,
+      "probability": 0.3,
+      "purpose": "Variable lighting conditions"
+    },
+    {
+      "name": "GaussNoise",
+      "var_limit": 100,
+      "probability": 0.2,
+      "purpose": "Scanning artifacts and camera noise"
+    },
+    {
+      "name": "ShiftScaleRotate",
+      "shift_limit": 0.1,
+      "scale_limit": 0.2,
+      "rotate_limit": 5,
+      "probability": 0.3,
+      "purpose": "Combined perspective and rotation"
+    }
+  ],
+  "validation_metrics": {
+    "primary_metric": "combined_score",
+    "combined_score_formula": "0.5 * F1_detection + 0.5 * accuracy_recognition",
+    "tracked_metrics": [
+      "F1_detection",
+      "accuracy_recognition",
+      "precision_detection",
+      "recall_detection",
+      "training_loss",
+      "validation_loss"
+    ]
+  },
+  "hardware_constraints": {
+    "target_gpu": "Colab Free Tier",
+    "gpu_models": ["T4", "P100"],
+    "vram_gb": 16,
+    "max_batch_size": 8,
+    "expected_training_time_per_epoch": "4-5 minutes"
+  },
+  "output_artifacts": [
+    "best_model/",
+    "epoch_checkpoints/",
+    "final.pth",
+    "training_log.txt",
+    "metrics.csv",
+    "raw_metrics.csv",
+    "loss_curve.png",
+    "f1_curve.png",
+    "accuracy_curve.png",
+    "combined_score_curve.png",
+    "lr_schedule.png",
+    "TRAINING_SUMMARY.md",
+    "inference/det_model/ (exported)"
+  ]
+}
