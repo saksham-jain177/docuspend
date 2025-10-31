@@ -1,0 +1,25 @@
+# PaddleOCR and Core ML Dependencies
+paddlepaddle-gpu>=3.0.0
+paddleocr>=2.8.1
+
+# Data Processing
+numpy>=1.24.0
+opencv-python>=4.8.0
+pillow>=10.0.0
+
+# Datasets
+datasets>=2.14.0
+huggingface-hub>=0.17.0
+
+# Config and Utils
+pyyaml>=6.0
+tqdm>=4.66.0
+pandas>=2.0.0
+
+# Visualization
+matplotlib>=3.8.0
+tensorboard>=2.14.0
+
+# Development
+jupyter>=1.0.0
+ipython>=8.15.0
