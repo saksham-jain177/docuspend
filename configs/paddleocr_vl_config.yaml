@@ -1,0 +1,60 @@
+# PaddleOCR-VL Model Configuration
+# Version: 3.3.0 (Released October 16, 2024)
+# For DocuSpend project: Receipt and Invoice OCR
+
+model:
+  name: "PaddleOCR-VL"
+  version: "3.3.0"
+  architecture: "NaViT + ERNIE"
+  parameters: "0.9B"
+  description: "Ultra-compact multimodal vision-language model for document understanding"
+
+language:
+  lang: "en"
+  support_langs: 109
+  multilingual: true
+
+inference:
+  device: "gpu"  # Use GPU in Colab
+  gpu_id: 0
+  use_mix_precision: true  # FP16 for efficiency on consumer hardware
+  dtype: "float16"
+
+input:
+  image_format: "BGR"
+  max_width: 1920  # Maximum input width
+  max_height: 1920  # Maximum input height
+
+output:
+  return_bboxes: true
+  return_confidence: true
+  format: "json"
+
+# Download information
+download:
+  huggingface_model: "https://huggingface.co/PaddlePaddle/PaddleOCR-VL"
+  huggingface_direct: "https://huggingface.co/PaddlePaddle/PaddleOCR-VL/resolve/main/paddleocr_vl_0.9b.pdparams"
+  bos_download: "https://paddle-model-ecology.bj.bcebos.com/paddleocr_vl/paddleocr_vl_0.9b.pdparams"
+  model_size_gb: 3.5
+
+# Cache settings
+cache:
+  cache_dir: "~/.paddleocr/"
+  auto_download: true
+  verify_checksum: true
+
+# Performance tuning
+optimization:
+  use_trt: false  # TensorRT (not available in Colab)
+  use_gpu: true
+  threads: 4
+  num_workers: 2
+  batch_size_inference: 1
+
+# Document-specific settings for receipt/invoice parsing
+document:
+  task: "receipt_invoice_parsing"
+  enable_tables: true
+  enable_formulas: false
+  enable_charts: false
+  confidence_threshold: 0.5
