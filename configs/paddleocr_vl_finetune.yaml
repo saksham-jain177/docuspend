@@ -1,0 +1,80 @@
+Global:
+  debug: False
+  use_gpu: True
+  use_amp: True                          # Mixed precision training (AMP)
+  amp_level: 'O1'                        # O1 or O2
+  epoch_num: 30                          # Max 30 epochs (user constraint)
+  log_smooth_window: 20
+  print_batch_step: 10                   # Log metrics every 10 batches
+  save_model_dir: ./output/              # Local checkpoint dir
+  save_epoch_step: 5                     # Save every 5 epochs
+  eval_batch_step: [500, 2000]          # Eval frequency
+  cal_metric_during_train: True          # Calculate metrics on validation set per eval_batch_step
+  save_best_model: True                  # Track best by validation metric
+  best_model_metric: 'custom_combined'   # Custom combined metric
+  pretrained_model: null                 # Will be set at runtime
+
+Optimizer:
+  name: Cosine
+  lr:
+    learning_rate: 0.001
+    warmup_epoch: 2                      # Warmup first 2 epochs
+  regularizer:
+    name: L2
+    factor: 0.0001
+
+Train:
+  dataset:
+    name: SimpleDataSet
+    data_dir: ./dataset/                 # Relative to cwd
+    label_file_list:
+      - ./dataset/train_list.txt
+    ratio_list: [1.0]
+    transforms:
+      - DecodeImage:
+          img_mode: BGR
+      - Rotate:
+          limit: 15
+          p: 0.3
+      - GaussianBlur:
+          blur_limit: 3
+          p: 0.2
+      - RandomContrast:
+          limit: 0.3
+          p: 0.3
+      - GaussNoise:
+          var_limit: 100
+          p: 0.2
+      - ShiftScaleRotate:
+          shift_limit: 0.1
+          scale_limit: 0.2
+          rotate_limit: 5
+          p: 0.3
+      - RecResizeImg:
+          image_shape: [3, 48, 320]
+      - KeepKeys:
+          keep_keys: ['image', 'label']
+  loader:
+    shuffle: True
+    drop_last: False
+    batch_size_per_card: 8               # Constraint: Colab Free GPU
+    num_workers: 4
+    timeout: 60
+
+Eval:
+  dataset:
+    name: SimpleDataSet
+    data_dir: ./dataset/
+    label_file_list:
+      - ./dataset/val_list.txt
+    transforms:
+      - DecodeImage:
+          img_mode: BGR
+      - RecResizeImg:
+          image_shape: [3, 48, 320]
+      - KeepKeys:
+          keep_keys: ['image', 'label']
+  loader:
+    batch_size_per_card: 8
+    num_workers: 4
+    timeout: 60
