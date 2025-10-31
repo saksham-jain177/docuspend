@@ -1,0 +1,57 @@
+# Core ML/DL - PaddleOCR and dependencies
+paddlepaddle-gpu>=3.0.0
+paddleocr>=2.8.1
+paddlex>=2.5.0
+
+# Deep Learning - PyTorch utilities (optional for training enhancements)
+torch>=2.0.0
+torchvision>=0.15.0
+torch-tb-profiler>=0.2.0
+
+# Data & Processing
+numpy>=1.24.0
+opencv-python>=4.8.0
+pillow>=10.0.0
+pillow-heif>=0.0.1
+scipy>=1.11.0
+scikit-image>=0.21.0
+scikit-learn>=1.3.0
+
+# Dataset & HuggingFace
+datasets>=2.14.0
+huggingface-hub>=0.17.0
+
+# Configuration & Utilities
+pyyaml>=6.0
+tqdm>=4.66.0
+pandas>=2.0.0
+python-dotenv>=1.0.0
+
+# Visualization & Monitoring
+matplotlib>=3.8.0
+seaborn>=0.13.0
+tensorboard>=2.14.0
+plotly>=5.17.0
+
+# Development & Testing
+pytest>=7.4.0
+black>=23.9.0
+flake8>=6.1.0
+
+# Jupyter/Colab Support
+jupyter>=1.0.0
+ipython>=8.15.0
+notebook>=7.0.0
+
+# Logging & Error Handling
+loguru>=0.7.0
+colorama>=0.4.6
+
+# API & Web (future use)
+requests>=2.31.0
+fastapi>=0.103.0
+uvicorn>=0.23.0
+
+# Documentation
+sphinx>=7.1.0
+sphinx-rtd-theme>=1.3.0
