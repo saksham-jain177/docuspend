@@ -1,0 +1,146 @@
+# Preprocessing Pipeline Configuration for Receipt/Invoice Images
+# DocuSpend Project - PaddleOCR-VL Fine-tuning Pipeline
+
+preprocessing:
+  # Resolution and DPI normalization
+  target_dpi: 300
+  target_width: null  # Auto-calculated based on DPI
+  preserve_aspect_ratio: true
+
+  # Image processing parameters
+  input_format: "BGR"
+  output_format: "png"
+  output_quality: 95
+
+  # Grayscale conversion
+  grayscale:
+    enabled: true
+    method: "cv2.COLOR_BGR2GRAY"
+
+  # Noise removal
+  noise_removal:
+    enabled: true
+    method: "gaussian_blur"
+    gaussian_blur:
+      kernel_size: [5, 5]
+      sigma: 0
+    bilateral_filter:
+      enabled: false
+      diameter: 9
+      sigma_color: 75
+      sigma_space: 75
+
+  # Deskewing (rotation correction)
+  deskew:
+    enabled: true
+    min_angle_threshold: 0.5  # degrees - skip if rotation less than this
+    max_angle_threshold: 45  # degrees - reject if rotation exceeds this
+    background_color: 255    # white fill for rotated areas
+    rotation_method: "cv2.INTER_CUBIC"
+
+  # Adaptive thresholding (binarization)
+  adaptive_threshold:
+    enabled: true
+    block_size: 11  # neighborhood size for local threshold
+    c_constant: 2   # constant subtracted from weighted mean
+    method: "cv2.ADAPTIVE_THRESH_GAUSSIAN_C"
+    thresh_type: "cv2.THRESH_BINARY"
+
+  # Morphological operations (optional cleaning)
+  morphology:
+    enabled: true
+    kernel_size: [2, 2]
+    operation: "close"  # Options: close, open, erode, dilate
+    iterations: 1
+
+  # Border padding
+  border_padding:
+    enabled: true
+    size: 20  # pixels to add on all sides
+    color: 255  # white
+    method: "cv2.BORDER_CONSTANT"
+
+  # Image size constraints
+  image_constraints:
+    min_width: 100
+    min_height: 100
+    max_width: 4000
+    max_height: 4000
+
+  # Contrast enhancement
+  contrast_enhancement:
+    enabled: false
+    method: "clahe"  # Contrast Limited Adaptive Histogram Equalization
+    clip_limit: 2.0
+    tile_grid: [8, 8]
+
+  # Color space processing
+  color_space:
+    convert_to_gray: true
+    invert: false
+    normalize_intensity: true
+
+# Processing pipeline order
+pipeline_order:
+  - "load_image"
+  - "grayscale_conversion"
+  - "noise_removal"
+  - "deskew"
+  - "adaptive_threshold"
+  - "morphology"
+  - "resolution_normalization"
+  - "border_padding"
+  - "save_image"
+
+# Batch processing
+batch_processing:
+  batch_size: 10
+  num_workers: 2
+  prefetch_size: 5
+  use_multiprocessing: true
+
+# Error handling
+error_handling:
+  skip_corrupted: true
+  log_errors: true
+  error_log_path: "outputs/logs/preprocessing_errors.log"
+  max_errors_allowed: 50
+
+# Logging and statistics
+logging:
+  verbose: true
+  log_level: "INFO"
+  log_interval: 50  # Log progress every N images
+
+# Output
+output:
+  save_dir: "data/processed/"
+  create_splits_dirs: true
+  overwrite_existing: false
+  compression_level: 9  # PNG compression (0-9)
+
+# Quality assurance
+quality_assurance:
+  enabled: true
+  generate_comparison_visualization: true
+  comparison_output_dir: "outputs/visualizations/"
+  sample_size: 15  # Generate before/after for this many images
+  verify_output: true
+
+# Seed for reproducibility
+seed: 42
+
+# Performance settings
+performance:
+  use_gpu: true
+  gpu_id: 0
+  multi_gpu: false
+  max_workers: 4
+  chunk_size: null
+
+# Validation
+validation:
+  validate_input: true
+  validate_output: true
+  check_dimensions: true
+  check_file_integrity: true
